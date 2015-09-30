@@ -1,6 +1,6 @@
-import Image
+import image
 		
-class ImageEffects(Image.Image):
+class ImageEffects(image.Image):
 	def for_all_pixels(self, function, *args):
 		for j in xrange(0, self.h):
 			for i in xrange(0, self.w):
