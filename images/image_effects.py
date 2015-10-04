@@ -40,3 +40,19 @@ class ImageEffects(image.Image):
 		self.for_all_pixels(self._pixelate, 2*radius, _pointillism, radius, buffer, jitter=jitter)
 		self.img = self.canvas
 
+	# This is very slow.
+	def blur(self, reach):
+		def _blur(i, j, reach):
+			pixel_aggregate = [0, 0, 0, 0]
+			count = 0
+			for y in xrange(-reach, reach + 1):
+				for x in xrange(-reach, reach + 1):
+					pixel = self.get_pixel(i + x, j + y)
+					if pixel:
+						pixel_aggregate = [sum(x) for x in zip(pixel_aggregate, pixel)]
+						count = count + 1
+			new_pixel = [pixel_aggregate[0]/count, pixel_aggregate[1]/count, pixel_aggregate[2]/count, 0xff]
+			self.set_pixel(i, j, new_pixel, True)
+		self.new_canvas()
+		self.for_all_pixels(_blur, reach)
+		self.img = self.canvas
